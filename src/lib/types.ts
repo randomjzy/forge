@@ -139,7 +139,7 @@ export interface ApiProvider {
 }
 
 // IM Channel types
-export type ImChannelType = 'feishu' | 'telegram' | 'discord'
+export type ImChannelType = 'feishu'
 export type ImChannelStatus = 'connected' | 'disconnected' | 'not_configured' | 'error'
 export type ImDmPolicy = 'pairing' | 'allowlist' | 'open' | 'disabled'
 export type ImGroupPolicy = 'allowlist' | 'open' | 'disabled'

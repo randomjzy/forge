@@ -60,8 +60,6 @@ class TokenBucket {
 
 /** Platform-specific max message lengths */
 const MAX_MSG_LEN: Record<ChannelType, number> = {
-  telegram: 4000,
-  discord: 1900,
   feishu: 30000,
 }
 

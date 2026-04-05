@@ -514,7 +514,7 @@ export function buildEnvironmentPrompt(cwd: string): string {
  * ~500 tokens vs ~3,000 tokens for the full prompt.
  */
 export const FORGE_IM_SYSTEM_PROMPT = `
-You are Forge, an AI assistant responding via an IM chat (Feishu/Telegram/Discord).
+You are Forge, an AI assistant responding via an IM chat (Feishu).
 
 Keep responses concise and conversational. Use markdown for formatting when helpful.
 

@@ -6,46 +6,46 @@
   /* Font settings — overridden by app-layout via useSettings */
   --forge-font-size: 14px;
 
-  /* Dark theme (default) — from Pencil design tokens */
-  --bg-page: #0B0B0E;
-  --bg-surface: #16161A;
-  --bg-elevated: #1A1A1E;
-  --bg-hover: #222226;
-  --bg-active: #2A2A2E;
+  /* Warm light theme — 暖色主题 */
+  --bg-page: #F9F6F2;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #F5F2ED;
+  --bg-hover: #F0ECE6;
+  --bg-active: #E8E3DC;
 
-  --text-primary: #FAFAF9;
-  --text-secondary: #8E8E93;
-  --text-tertiary: #6B6B70;
-  --text-muted: #4A4A50;
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --text-muted: #B0B0B0;
 
-  --border-subtle: #2A2A2E;
-  --border-strong: #3A3A40;
+  --border-subtle: #E0E0E0;
+  --border-strong: #CCCCCC;
 
-  --accent-indigo: #6366F1;
-  --accent-green: #32D583;
-  --accent-amber: #FFB547;
-  --accent-coral: #E85A4F;
+  --accent-indigo: #D97757;
+  --accent-green: #4CAF50;
+  --accent-amber: #D97757;
+  --accent-coral: #D97757;
 }
 
 [data-theme="light"] {
-  --bg-page: #FFFFFF;
-  --bg-surface: #F5F5F4;
-  --bg-elevated: #FAFAF9;
-  --bg-hover: #F0F0EE;
-  --bg-active: #E8E8E6;
+  --bg-page: #F9F6F2;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #F5F2ED;
+  --bg-hover: #F0ECE6;
+  --bg-active: #E8E3DC;
 
-  --text-primary: #1A1A1E;
-  --text-secondary: #6B6B70;
-  --text-tertiary: #8E8E93;
-  --text-muted: #B0B0B4;
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --text-muted: #B0B0B0;
 
-  --border-subtle: #E8E8E6;
-  --border-strong: #D0D0CE;
+  --border-subtle: #E0E0E0;
+  --border-strong: #CCCCCC;
 
-  --accent-indigo: #6366F1;
-  --accent-green: #22C55E;
-  --accent-amber: #F59E0B;
-  --accent-coral: #EF4444;
+  --accent-indigo: #D97757;
+  --accent-green: #4CAF50;
+  --accent-amber: #D97757;
+  --accent-coral: #D97757;
 }
 
 /* Animation utility classes */
@@ -140,7 +140,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Electron title bar drag region */
+  /* Electron frameless window drag region */
   .titlebar-drag {
     -webkit-app-region: drag;
   }
@@ -149,7 +149,7 @@
     -webkit-app-region: no-drag;
   }
 
-  /* Scrollbar styling for dark theme */
+  /* Scrollbar styling */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;

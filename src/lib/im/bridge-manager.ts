@@ -19,9 +19,7 @@ import { getDb } from '@/lib/db'
 import type { ChannelAdapter } from './adapters/base'
 import { createAdapter } from './adapters/registry'
 // Ensure all adapters are registered
-import './adapters/telegram'
 import './adapters/feishu'
-import './adapters/discord'
 
 import { ChannelRouter } from './channel-router'
 import { SessionLockManager } from './concurrency'
@@ -428,7 +426,7 @@ class BridgeManager {
             // Feishu doesn't support reliable message editing — skip draft previews
             if (msg.channelType === 'feishu') return
             // Skip if text hasn't changed — prevents duplicate messages when edit fails
-            // (Telegram/Discord reject edits with identical content, causing fall-through to new send)
+            // (Platform rejects edits with identical content, causing fall-through to new send)
             if (streamingState.isDraftUnchanged(partialText)) return
 
             const draftMsgId = streamingState.getDraftMessageId()

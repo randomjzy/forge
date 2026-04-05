@@ -3,7 +3,20 @@
     "allow": [
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(git push)"
+      "Bash(git push)",
+      "Bash(del *)",
+      "Bash(pnpm *)",
+      "Bash(timeout *)",
+      "Bash(tasklist)",
+      "Bash(findstr *)",
+      "Bash(taskkill *)",
+      "Bash(powershell *)",
+      "Bash(curl *)",
+      "Bash(npx *)",
+      "Bash(select-object *)",
+      "Bash(git checkout *)",
+      "Bash(netstat *)",
+      "Bash(git rm *)"
     ]
   },
   "$version": 3

@@ -55,7 +55,7 @@ export class StreamingState {
 
   /**
    * Check if the draft text has changed since the last update.
-   * Prevents sending identical edits that Telegram/Discord reject,
+   * Prevents sending identical edits that the platform rejects,
    * which would cause fall-through to sending duplicate new messages.
    */
   isDraftUnchanged(text: string): boolean {

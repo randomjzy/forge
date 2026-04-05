@@ -10,7 +10,7 @@
 // Channel & status types
 // ---------------------------------------------------------------------------
 
-export type ChannelType = 'telegram' | 'feishu' | 'discord'
+export type ChannelType = 'feishu'
 
 /** Runtime adapter status (L1) */
 export type AdapterStatus = 'running' | 'stopped' | 'error'
@@ -28,7 +28,7 @@ export type StreamingPhase = 'idle' | 'typing' | 'draft' | 'final'
 /** Normalized inbound message from any platform (L1 → L2) */
 export interface IncomingMessage {
   channelType: ChannelType
-  channelId: string        // DB channel id ('telegram' | 'feishu' | 'discord')
+  channelId: string        // DB channel id ('feishu')
   chatId: string           // Platform-specific chat identifier
   messageId?: string       // Platform message ID for deduplication
   senderId: string

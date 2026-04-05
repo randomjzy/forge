@@ -3,8 +3,6 @@
  *
  * Parses Claude's markdown response into a platform-agnostic IR,
  * then renders it into platform-specific formats:
- *   - Telegram: MarkdownV2
- *   - Discord: Discord-flavored markdown
  *   - Feishu: Plain text (Feishu has limited markdown support)
  */
 
@@ -130,31 +128,12 @@ function parseInline(text: string, nodes: MarkdownNode[]): void {
  * Render IR nodes for a specific platform.
  */
 export function renderForPlatform(text: string, channelType: ChannelType): string {
-  // For now, return the original text with minimal transformation.
-  // Full IR parsing is available but platform-specific escaping
-  // can cause issues with complex markdown — use conservative approach.
   switch (channelType) {
-    case 'telegram':
-      return renderForTelegram(text)
-    case 'discord':
-      return text // Discord natively supports markdown
     case 'feishu':
       return renderForFeishu(text)
     default:
       return text
   }
-}
-
-/**
- * Render for Telegram (Markdown parse mode).
- * Telegram's Markdown mode is limited — keep it simple.
- */
-function renderForTelegram(text: string): string {
-  // Telegram Markdown mode supports:
-  //   *bold*, _italic_, `code`, ```code block```, [link](url)
-  // But doesn't support nested formatting or complex markdown.
-  // Return as-is — Telegram handles standard markdown reasonably well.
-  return text
 }
 
 /**
@@ -203,53 +182,9 @@ function renderForFeishu(text: string): string {
 // ---------------------------------------------------------------------------
 
 /**
- * Render IR nodes to Telegram MarkdownV2.
- * Reserved for when we need full MarkdownV2 support.
+ * Render IR nodes to Feishu markdown.
  */
-export function renderNodesToTelegramV2(nodes: MarkdownNode[]): string {
-  const parts: string[] = []
-
-  for (const node of nodes) {
-    switch (node.type) {
-      case 'text':
-        parts.push(escapeTelegramV2(node.content))
-        break
-      case 'code_block':
-        parts.push(`\`\`\`${node.language || ''}\n${node.content}\n\`\`\``)
-        break
-      case 'inline_code':
-        parts.push(`\`${node.content}\``)
-        break
-      case 'bold':
-        parts.push(`*${escapeTelegramV2(node.content)}*`)
-        break
-      case 'italic':
-        parts.push(`_${escapeTelegramV2(node.content)}_`)
-        break
-      case 'link':
-        parts.push(`[${escapeTelegramV2(node.content)}](${node.url})`)
-        break
-      case 'heading':
-        parts.push(`*${escapeTelegramV2(node.content)}*`)
-        break
-      case 'newline':
-        parts.push('\n')
-        break
-    }
-  }
-
-  return parts.join('')
-}
-
-/** Escape special characters for Telegram MarkdownV2 */
-function escapeTelegramV2(text: string): string {
-  return text.replace(/([_*\[\]()~`>#+\-=|{}.!\\])/g, '\\$1')
-}
-
-/**
- * Render IR nodes to Discord markdown.
- */
-export function renderNodesToDiscord(nodes: MarkdownNode[]): string {
+export function renderNodesToFeishu(nodes: MarkdownNode[]): string {
   const parts: string[] = []
 
   for (const node of nodes) {

@@ -7,7 +7,7 @@ import { useI18n } from '@/components/providers/i18n-provider'
 import { useImChannels } from '@/hooks/use-im-channels'
 import { useSettings } from '@/hooks/use-settings'
 import { useModels } from '@/hooks/use-models'
-import { LayoutDashboard, Send, MessageCircle, Gamepad2, ChevronRight } from 'lucide-react'
+import { LayoutDashboard, MessageCircle, ChevronRight } from 'lucide-react'
 import type { ImChannel, ImChannelType, ImDmPolicy, ImGroupPolicy, ImTriggerMode } from '@/lib/types'
 
 import type { LucideIcon } from 'lucide-react'
@@ -23,16 +23,6 @@ interface PlatformMeta {
 }
 
 const PLATFORM_META: Record<ImChannelType, PlatformMeta> = {
-  telegram: {
-    label: 'Telegram',
-    Icon: Send,
-    color: 'text-indigo',
-    credentialFields: [
-      { key: 'bot_token', label: 'Bot Token', placeholder: '123456:ABC-DEF1234ghIkl-zyx57W2v...', hintKey: 'im.hint.tgBotToken', type: 'password' },
-      { key: 'chat_id', label: 'Chat ID', placeholder: '-1001234567890', hintKey: 'im.hint.tgChatId' },
-    ],
-    setupStepKeys: ['im.setup.tg1', 'im.setup.tg2', 'im.setup.tg3', 'im.setup.tg4'],
-  },
   feishu: {
     label: 'Feishu',
     Icon: MessageCircle,
@@ -43,17 +33,6 @@ const PLATFORM_META: Record<ImChannelType, PlatformMeta> = {
       { key: 'platform', labelKey: 'im.label.platform', placeholder: '', hintKey: 'im.hint.fsPlatform' },
     ],
     setupStepKeys: ['im.setup.fs1', 'im.setup.fs2', 'im.setup.fs3', 'im.setup.fs4', 'im.setup.fs5'],
-  },
-  discord: {
-    label: 'Discord',
-    Icon: Gamepad2,
-    color: 'text-coral',
-    credentialFields: [
-      { key: 'bot_token', label: 'Bot Token', placeholder: 'MTIzNDU2...XXXXXX.XXXXXXXXXX', hintKey: 'im.hint.dcBotToken', type: 'password' },
-      { key: 'server_id', label: 'Server ID', placeholder: '123456789012345678', hintKey: 'im.hint.dcServerId' },
-      { key: 'channel_id', labelKey: 'im.label.channelIdOptional', placeholder: '', placeholderKey: 'im.placeholder.dcChannelId', hintKey: 'im.hint.dcChannelId' },
-    ],
-    setupStepKeys: ['im.setup.dc1', 'im.setup.dc2', 'im.setup.dc3', 'im.setup.dc4'],
   },
 }
 
@@ -66,9 +45,7 @@ export function ImView() {
 
   const NAV_ITEMS: { key: SubPage; label: string; Icon: LucideIcon }[] = [
     { key: 'overview', label: t('im.overview'), Icon: LayoutDashboard },
-    { key: 'telegram', label: 'Telegram', Icon: Send },
     { key: 'feishu', label: 'Feishu', Icon: MessageCircle },
-    { key: 'discord', label: 'Discord', Icon: Gamepad2 },
   ]
 
   return (
@@ -194,7 +171,7 @@ function OverviewPage({
 
       {/* Channel cards */}
       <div className="space-y-3">
-        {(['telegram', 'feishu', 'discord'] as ImChannelType[]).map((type) => {
+        {(['feishu'] as ImChannelType[]).map((type) => {
           const channel = channels.find((c) => c.type === type)
           const meta = PLATFORM_META[type]
           if (!channel) return null
@@ -405,7 +382,7 @@ function PlatformPage({
                 size="sm"
               />
             ) : (
-              <div className={cn('flex gap-2', field.key === 'chat_id' && type === 'telegram' ? 'items-center' : '')}>
+              <div className="flex gap-2">
                 <input
                   type={field.type || 'text'}
                   value={creds[field.key] || ''}
@@ -413,15 +390,6 @@ function PlatformPage({
                   placeholder={field.placeholderKey ? t(field.placeholderKey) : field.placeholder}
                   className="w-full h-9 px-3 rounded-lg bg-elevated border border-subtle text-[13px] text-primary placeholder:text-muted outline-none focus:border-indigo"
                 />
-                {field.key === 'chat_id' && type === 'telegram' && (
-                  <button
-                    onClick={handleAutoDetect}
-                    disabled={autoDetecting}
-                    className="shrink-0 h-9 px-3 rounded-lg border border-indigo text-indigo text-[12px] font-medium hover:bg-indigo/10 transition-colors disabled:opacity-50"
-                  >
-                    {autoDetecting ? t('status.detecting') : t('button.autoDetect')}
-                  </button>
-                )}
               </div>
             )}
             <p className="text-[11px] text-tertiary">{field.hintKey ? t(field.hintKey) : ''}</p>

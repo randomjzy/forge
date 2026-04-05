@@ -198,9 +198,15 @@ function createWindow(url: string) {
     height: 900,
     minWidth: 900,
     minHeight: 600,
-    titleBarStyle: 'hiddenInset',
+    frame: false,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: '#F9F6F2',
+      symbolColor: '#1A1A1A',
+      height: 38,
+    },
     trafficLightPosition: { x: 16, y: 10 },
-    backgroundColor: '#0B0B0E',
+    backgroundColor: '#F9F6F2',
     show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),

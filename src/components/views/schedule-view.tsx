@@ -305,12 +305,10 @@ export function ScheduleView({ workspaceId }: ScheduleViewProps) {
               <div>
                 <label className="block text-[12px] text-secondary mb-1.5">{t('schedule.notifyChannel')}</label>
                 <CustomSelect
-                  value={heartbeat.config.notify_channel || 'telegram'}
+                  value={heartbeat.config.notify_channel || 'feishu'}
                   onChange={(v) => updateTask(heartbeat.id, { config: { ...heartbeat.config, notify_channel: v } })}
                   options={[
-                    { value: 'telegram', label: 'Telegram' },
                     { value: 'feishu', label: 'Feishu' },
-                    { value: 'discord', label: 'Discord' },
                   ]}
                   size="sm"
                 />
@@ -846,9 +844,7 @@ function TaskFormModal({ mode, workspaceId, task, onSubmit, onClose }: {
               onChange={setNotifyChannel}
               options={[
                 { value: 'none', label: t('schedule.notifyNone') },
-                { value: 'telegram', label: 'Telegram' },
                 { value: 'feishu', label: 'Feishu' },
-                { value: 'discord', label: 'Discord' },
               ]}
               size="md"
             />
