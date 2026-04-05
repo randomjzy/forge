@@ -9,6 +9,7 @@ export interface AgentFrontmatter {
   model?: string
   enabled?: boolean
   disallowedTools?: string[]
+  avatar?: string  // Avatar URL or emoji
 }
 
 /**
@@ -90,6 +91,9 @@ export function parseFrontmatter(content: string): { frontmatter: AgentFrontmatt
             frontmatter.disallowedTools = items
           }
         }
+        break
+      case 'avatar':
+        frontmatter.avatar = value
         break
     }
   }

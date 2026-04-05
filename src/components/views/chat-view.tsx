@@ -9,8 +9,13 @@ import type { Session, Message, ContentBlock, PermissionStatus, ToolRawContent }
 import { MarkdownRenderer } from '@/components/markdown-renderer'
 import { AgentBlock, ParallelAgentIndicator, isAgentToolCall } from '@/components/chat/agent-block'
 import { SlashCommandMenu } from '@/components/chat/slash-command-menu'
+import { AgentMentionMenu, useAgentMention } from '@/components/chat/agent-mention-menu'
+import { GroupMembersPanel, getDefaultGroupMembers, type GroupMember } from '@/components/chat/group-members-panel'
 import { useSlashCommands } from '@/hooks/use-slash-commands'
 import { useModels } from '@/hooks/use-models'
+import { useAgents } from '@/hooks/use-agents'
+import { useFileAgents } from '@/hooks/use-file-agents'
+import { useAgentAvatars } from '@/hooks/use-agent-avatars'
 import { getModelDisplayLabel, getModelLabel } from '@/lib/models'
 import { filterCommands, type SlashCommand } from '@/lib/slash-commands'
 
@@ -79,6 +84,75 @@ export function ChatView({
 
   const toolbarWidth = useContainerWidth(toolbarRef)
   const isCompact = toolbarWidth > 0 && toolbarWidth <= 500
+
+  // ── Group Members ──
+  const { agents } = useAgents()
+  const { agents: fileAgents } = useFileAgents(workspaceId || null)
+  const { getAvatarUrl } = useAgentAvatars()
+  const [groupMembers, setGroupMembers] = useState<GroupMember[]>(getDefaultGroupMembers())
+  const [activeMemberId, setActiveMemberId] = useState<string | null>('secretary')
+  const [invitedAgentIds, setInvitedAgentIds] = useState<Set<string>>(new Set())
+
+  // Agent mention handling
+  const handleMentionSelect = useCallback((memberId: string, newInput: string) => {
+    setInput(newInput)
+    setActiveMemberId(memberId)
+    textareaRef.current?.focus()
+  }, [])
+  const { mentionMenuOpen, mentionIndex, setMentionIndex, mentionQuery, handleMentionSelect: handleMentionSelectFromHook, handleKeyDown: handleMentionKeyDown } = useAgentMention(input, handleMentionSelect)
+
+  // Convert agents to GroupMember format for the panel
+  // Combines database agents (from useAgents) and file-based agents (from useFileAgents)
+  // Avatars are fetched from the database via useAgentAvatars hook
+  const availableAgents: GroupMember[] = useMemo(() => {
+    // Database agents (exclude main/secretary agent)
+    const dbAgents = agents
+      .filter(a => !a.isMain && a.enabled)
+      .map(a => ({
+        id: a.id,
+        name: a.name,
+        type: 'agent' as const,
+        description: a.description,
+        avatar: getAvatarUrl(a.id) || undefined,
+        source: 'db' as const,
+      }))
+
+    // File-based agents (use name as id, prefix with 'file:' to avoid conflicts)
+    const fAgents = fileAgents
+      .filter(a => !dbAgents.some(db => db.name === a.name)) // Dedupe by name
+      .map(a => ({
+        id: `file:${a.name}`,
+        name: a.name,
+        type: 'agent' as const,
+        description: a.description || 'File-based agent',
+        avatar: getAvatarUrl(a.name) || undefined,
+        source: 'file' as const,
+      }))
+
+    return [...dbAgents, ...fAgents]
+  }, [agents, fileAgents, getAvatarUrl])
+
+  // Handle inviting an agent to the group
+  const handleInviteAgent = useCallback((agent: GroupMember) => {
+    setGroupMembers(prev => {
+      if (prev.some(m => m.id === agent.id)) return prev
+      return [...prev, { ...agent, isActive: false }]
+    })
+    setInvitedAgentIds(prev => new Set([...prev, agent.id]))
+  }, [])
+
+  // Handle removing an agent from the group
+  const handleRemoveAgent = useCallback((memberId: string) => {
+    setGroupMembers(prev => prev.filter(m => m.id !== memberId))
+    setInvitedAgentIds(prev => {
+      const next = new Set(prev)
+      next.delete(memberId)
+      return next
+    })
+    if (activeMemberId === memberId) {
+      setActiveMemberId('secretary')
+    }
+  }, [activeMemberId])
 
   // ── Slash Commands ──
   const allCommands = useSlashCommands(workspaceId)
@@ -485,7 +559,7 @@ export function ChatView({
   if (!session) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-4">
-        <img src="/mascot.png" alt="Forge" className="w-20 h-20 object-contain" />
+        <img src="/mascot.png" alt="SiliconEmp" className="w-20 h-20 object-contain" />
         <p className="text-[14px] text-secondary">{t('chat.startNew')}</p>
         <button
           onClick={onNewSession}
@@ -499,8 +573,19 @@ export function ChatView({
   }
 
   return (
-    <div className="flex flex-col h-full">
-      {/* Chat Header */}
+    <div className="flex h-full">
+      <GroupMembersPanel
+        members={groupMembers}
+        activeMemberId={activeMemberId}
+        onMemberSelect={setActiveMemberId}
+        onInviteAgent={() => {}}
+        onRemoveAgent={handleRemoveAgent}
+        availableAgents={availableAgents}
+        onAgentSelect={handleInviteAgent}
+        width={200}
+      />
+      <div className="flex flex-col flex-1 min-w-0">
+        {/* Chat Header */}
       <div ref={toolbarRef} className="flex items-center justify-between px-5 h-[52px] border-b border-subtle shrink-0 min-w-0">
         <div className="flex items-center gap-3 min-w-0 flex-1 overflow-hidden">
           <span className="text-[15px] font-semibold text-primary truncate">
@@ -527,7 +612,7 @@ export function ChatView({
       <div ref={messagesContainerRef} className="flex-1 overflow-y-auto px-6 py-4">
         {messages.length === 0 && !streaming && (
           <div className="flex flex-col items-center justify-center h-full gap-5">
-            <img src="/mascot.png" alt="Forge" className="w-20 h-20 object-contain" />
+            <img src="/mascot.png" alt="SiliconEmp" className="w-20 h-20 object-contain" />
             <div className="text-center space-y-1.5">
               <p className="text-[14px] text-muted">{t('chat.suggestions')}</p>
             </div>
@@ -649,6 +734,15 @@ export function ChatView({
               onSelect={handleSlashSelect}
             />
           )}
+          {/* Agent mention menu */}
+          {mentionMenuOpen && (
+            <AgentMentionMenu
+              members={groupMembers.filter(m => m.type === 'agent' || m.type === 'secretary')}
+              selectedIndex={mentionIndex}
+              onSelect={handleMentionSelectFromHook}
+              filterQuery={mentionQuery}
+            />
+          )}
           {/* Textarea Area */}
           <div className="px-3.5 pt-3 pb-2 min-h-[80px]">
             <textarea
@@ -684,6 +778,36 @@ export function ChatView({
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault()
                     handleSlashSelect(filteredCommands[slashIndex])
+                    return
+                  }
+                }
+                // Agent mention menu keyboard navigation
+                const mentionMembers = groupMembers.filter(m => m.type === 'agent' || m.type === 'secretary')
+                if (mentionMenuOpen) {
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault()
+                    setMentionIndex((i) => Math.min(i + 1, mentionMembers.length - 1))
+                    return
+                  }
+                  if (e.key === 'ArrowUp') {
+                    e.preventDefault()
+                    setMentionIndex((i) => Math.max(i - 1, 0))
+                    return
+                  }
+                  if (e.key === 'Tab' || (e.key === 'Enter' && !e.shiftKey)) {
+                    e.preventDefault()
+                    if (mentionMembers[mentionIndex]) {
+                      handleMentionSelectFromHook(mentionMembers[mentionIndex])
+                    }
+                    return
+                  }
+                  if (e.key === 'Escape') {
+                    e.preventDefault()
+                    // Remove the @ trigger from input
+                    const atIndex = input.lastIndexOf('@')
+                    if (atIndex >= 0) {
+                      setInput(input.slice(0, atIndex))
+                    }
                     return
                   }
                 }
@@ -864,6 +988,7 @@ export function ChatView({
               )}
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>

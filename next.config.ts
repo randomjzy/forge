@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  serverExternalPackages: ['better-sqlite3', '@larksuiteoapi/node-sdk'],
+  serverExternalPackages: ['better-sqlite3', '@larksuiteoapi/node-sdk', 'playwright'],
 }
 
 export default nextConfig

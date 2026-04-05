@@ -15,7 +15,7 @@ const fraunces = Fraunces({
 })
 
 export const metadata: Metadata = {
-  title: 'Forge',
+  title: 'SiliconEmp',
   description: 'Local AI Agent Desktop',
 }
 

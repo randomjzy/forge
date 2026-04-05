@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { Folder, Save, WrapText } from 'lucide-react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { Folder, Save, WrapText, Upload, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CodeEditor } from '@/components/ui/code-editor'
 import { useWordWrap } from '@/hooks/use-word-wrap'
@@ -9,6 +9,7 @@ import { MarkdownPreview } from '@/components/ui/markdown-preview'
 import { CustomSelect } from '@/components/ui/custom-select'
 import { useI18n } from '@/components/providers/i18n-provider'
 import { useModels } from '@/hooks/use-models'
+import { useAgentAvatars } from '@/hooks/use-agent-avatars'
 import type { AgentSelection, SubAgentInfo } from '@/hooks/use-agent-config'
 
 const TOOL_LIST = [
@@ -233,6 +234,23 @@ function SubAgentEditor({
   const [saving, setSaving] = useState(false)
   const { wordWrap, toggleWordWrap } = useWordWrap()
 
+  // Avatar management
+  const { getAvatarUrl, uploadAvatar } = useAgentAvatars()
+  const avatarInputRef = useRef<HTMLInputElement>(null)
+  const agentName = filename.replace(/\.md$/, '')
+  const avatarUrl = getAvatarUrl(agentName)
+
+  const handleAvatarClick = useCallback(() => {
+    avatarInputRef.current?.click()
+  }, [])
+
+  const handleAvatarFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    e.target.value = ''
+    await uploadAvatar(agentName, file)
+  }, [agentName, uploadAvatar])
+
   // Load file content
   useEffect(() => {
     setLoading(true)
@@ -403,6 +421,43 @@ function SubAgentEditor({
       ) : (
         /* Settings Tab */
         <div className="flex-1 overflow-y-auto px-6 py-6">
+          {/* Avatar Section */}
+          <div className="mb-8">
+            <h3 className="text-[14px] font-semibold text-primary mb-1">{t('agent.avatar') || '头像'}</h3>
+            <p className="text-[12px] text-tertiary mb-3">{t('agent.avatarDesc') || '设置 Agent 头像'}</p>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleAvatarClick}
+                className="w-16 h-16 rounded-full overflow-hidden bg-elevated border-2 border-dashed border-subtle hover:border-indigo transition-colors flex items-center justify-center"
+                title={t('agent.changeAvatar') || '点击更换头像'}
+              >
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt={agentName} className="w-full h-full object-cover" />
+                ) : (
+                  <User size={24} className="text-tertiary" />
+                )}
+              </button>
+              <div className="flex flex-col gap-1">
+                <button
+                  onClick={handleAvatarClick}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo text-white text-[12px] font-medium hover:opacity-90 transition-opacity"
+                >
+                  <Upload size={12} /> {t('button.uploadAvatar') || '上传头像'}
+                </button>
+                {avatarUrl && (
+                  <span className="text-[11px] text-tertiary">{t('agent.currentAvatar') || '已设置头像'}</span>
+                )}
+              </div>
+            </div>
+            <input
+              ref={avatarInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              className="hidden"
+              onChange={handleAvatarFileChange}
+            />
+          </div>
+
           {/* Model Section */}
           <div className="mb-8">
             <h3 className="text-[14px] font-semibold text-primary mb-1">{t('form.model')}</h3>

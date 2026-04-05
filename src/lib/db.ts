@@ -437,6 +437,15 @@ export function getDb(): Database.Database {
     );
   `)
 
+  // Agent avatars table: stores avatar image paths for agents (both DB and file-based)
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS agent_avatars (
+      agent_id TEXT PRIMARY KEY,
+      avatar_path TEXT NOT NULL DEFAULT '',
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+  `)
+
   // --- Auto-sync MCP servers from Claude Code (~/.claude.json) ---
   syncMcpFromClaudeCode(db)
 

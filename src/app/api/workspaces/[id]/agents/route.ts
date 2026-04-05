@@ -26,6 +26,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
         model: frontmatter.model || 'inherit',
         enabled: frontmatter.enabled !== false,
         disallowedTools: frontmatter.disallowedTools || [],
+        avatar: frontmatter.avatar || null,
       }
     })
 
@@ -57,6 +58,7 @@ name: ${name}
 description: ${body.description || ''}
 model: inherit
 enabled: true
+avatar: ${body.avatar || ''}
 ---
 
 You are ${name}. Complete the delegated task concisely.

@@ -45,7 +45,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'settings.modelApi': '模型和 API',
     'settings.modelApiDesc': '配置 API 提供商和模型设置。',
     'settings.permission': '权限',
-    'settings.permissionDesc': '控制 Forge 处理危险操作的方式。',
+    'settings.permissionDesc': '控制 SiliconEmp 处理危险操作的方式。',
     'settings.project': '项目',
     'settings.projectDesc': '工作区和记忆设置。',
     'settings.workspace': '工作区',
@@ -136,13 +136,13 @@ const translations: Record<Locale, Record<string, string>> = {
     'schedule.engineStopped': '引擎已停止',
 
     // Onboarding
-    'onboarding.welcome': '欢迎使用 Forge',
+    'onboarding.welcome': '欢迎使用金科数字员工',
     'onboarding.welcomeDesc': '你的本地 AI Agent 工作站。让我们花几步完成初始设置。',
     'onboarding.getStarted': '开始',
     'onboarding.whatName': '怎么称呼你？',
     'onboarding.nameDesc': '这有助于个性化你的体验。',
     'onboarding.whatDo': '你做什么工作？',
-    'onboarding.roleDesc': '这有助于 Forge 定制回复内容。',
+    'onboarding.roleDesc': '这有助于 SiliconEmp 定制回复内容。',
     'onboarding.howRespond': '你希望我怎么回复？',
     'onboarding.styleDesc': '选择你偏好的交流风格。',
     'onboarding.connectApi': '连接 API',
@@ -221,6 +221,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'button.search': '搜索',
     'button.newConfigFile': '新建配置文件',
     'button.newAgentFile': '新建 Agent 文件',
+    'button.uploadAvatar': '上传头像',
     'button.addServer': '添加服务器',
     'button.addCustomProvider': '添加自定义提供商',
     'button.addProvider': '添加提供商',
@@ -308,6 +309,10 @@ const translations: Record<Locale, Record<string, string>> = {
     'agent.configureTools': '配置此子 Agent 可访问的工具',
     'agent.instructions': '指令',
     'agent.settings': '设置',
+    'agent.avatar': '头像',
+    'agent.avatarDesc': '设置 Agent 的头像图片',
+    'agent.changeAvatar': '点击更换头像',
+    'agent.currentAvatar': '已设置头像',
 
     // Manage
     'manage.configFiles': '配置文件',
@@ -335,7 +340,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'onboarding.skipForNow': '跳过 — 稍后在设置中配置',
 
     // Settings additional
-    'settings.customProviderDesc': '先选择协议，再填写端点。Anthropic 兼容的自定义提供商可直接用于 Forge 对话；OpenAI 兼容端点保留为兼容选项。',
+    'settings.customProviderDesc': '先选择协议，再填写端点。Anthropic 兼容的自定义提供商可直接用于 SiliconEmp 对话；OpenAI 兼容端点保留为兼容选项。',
     'settings.customProviderAnthropicNote': 'Anthropic 兼容的自定义提供商会进入模型列表，并可用于实际对话。',
     'settings.customProviderOpenAiNote': 'OpenAI 兼容的自定义提供商保留为兼容选项，适用于已存在的 OpenAI 兼容端点配置。',
 
@@ -525,7 +530,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'onboarding.orEnterPath': '或手动输入路径',
     'onboarding.nextStep': '下一步',
     'onboarding.back': '返回',
-    'onboarding.startUsing': '开始使用 Forge',
+    'onboarding.startUsing': '开始使用 SiliconEmp',
     'onboarding.cliPlaceholder': '使用 CLI 订阅 — 或输入 API Key...',
     // Manage empty states
     'manage.selectFile': '选择一个文件进行编辑',
@@ -574,7 +579,7 @@ const translations: Record<Locale, Record<string, string>> = {
   },
 
   en: {
-    'app.name': 'Forge',
+    'app.name': 'SiliconEmp',
 
     'sidebar.chat': 'Chat',
     'sidebar.manage': 'Manage',
@@ -694,7 +699,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'schedule.engineRunning': 'Engine Running',
     'schedule.engineStopped': 'Engine Stopped',
 
-    'onboarding.welcome': 'Welcome to Forge',
+    'onboarding.welcome': 'Welcome to SiliconEmp',
     'onboarding.welcomeDesc': 'Your local AI agent workstation. Let\'s set things up in a few quick steps.',
     'onboarding.getStarted': 'Get Started',
     'onboarding.whatName': 'What should I call you?',
@@ -771,6 +776,7 @@ const translations: Record<Locale, Record<string, string>> = {
     'button.search': 'Search',
     'button.newConfigFile': 'New Config File',
     'button.newAgentFile': 'New Agent File',
+    'button.uploadAvatar': 'Upload Avatar',
     'button.addServer': 'Add Server',
     'button.addCustomProvider': 'Add Custom Provider',
     'button.addProvider': 'Add Provider',
@@ -858,6 +864,10 @@ const translations: Record<Locale, Record<string, string>> = {
     'agent.configureTools': 'Configure which tools this sub-agent can access',
     'agent.instructions': 'Instructions',
     'agent.settings': 'Settings',
+    'agent.avatar': 'Avatar',
+    'agent.avatarDesc': 'Set the avatar image for this agent',
+    'agent.changeAvatar': 'Click to change avatar',
+    'agent.currentAvatar': 'Avatar set',
 
     // Manage
     'manage.configFiles': 'Config Files',

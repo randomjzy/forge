@@ -3,12 +3,13 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Search, FilePlus, ChevronRight, ChevronDown,
-  FileText, Pencil, Trash2,
+  FileText, Pencil, Trash2, Image,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/components/providers/i18n-provider'
 import { GLOBAL_WORKSPACE_ID } from '@/lib/types'
 import type { AgentSelection } from '@/hooks/use-agent-config'
+import { useAgentAvatars } from '@/hooks/use-agent-avatars'
 
 interface AgentFileNode {
   name: string
@@ -53,7 +54,14 @@ export function AgentsPanel({
   const [isDraggingExternal, setIsDraggingExternal] = useState(false)
   const subAgentsRef = useRef<HTMLDivElement>(null)
 
+  // Avatar management
+  const { getAvatarUrl, uploadAvatar, removeAvatar } = useAgentAvatars()
+
   const workspaceId = GLOBAL_WORKSPACE_ID
+
+  // Avatar upload ref and state
+  const avatarInputRef = useRef<HTMLInputElement>(null)
+  const [uploadingAvatarFor, setUploadingAvatarFor] = useState<string | null>(null)
 
   // Fetch agent files (flat list of .md files from agents/)
   const fetchAgentFiles = useCallback(async () => {
@@ -120,6 +128,35 @@ export function AgentsPanel({
       fetchAgentFiles()
     } catch { /* ignore */ }
   }, [workspaceId, fetchAgentFiles])
+
+  // Handle avatar upload click
+  const handleAvatarClick = useCallback((agentName: string) => {
+    setUploadingAvatarFor(agentName)
+    avatarInputRef.current?.click()
+  }, [])
+
+  // Handle avatar file selected
+  const handleAvatarFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !uploadingAvatarFor) {
+      console.error('[avatar] no file or no agent name', { file: !!file, uploadingAvatarFor })
+      return
+    }
+
+    const agentName = uploadingAvatarFor
+    setUploadingAvatarFor(null)
+
+    // Clear the input
+    e.target.value = ''
+
+    console.log('[avatar] uploading for', agentName, file.name, file.size)
+    const success = await uploadAvatar(agentName, file)
+    if (!success) {
+      console.error('Failed to upload avatar for', agentName)
+    } else {
+      console.log('[avatar] upload success for', agentName)
+    }
+  }, [uploadingAvatarFor, uploadAvatar])
 
   // Rename a config file
   const handleRenameConfig = useCallback(async (oldName: string, newName: string) => {
@@ -376,8 +413,32 @@ export function AgentsPanel({
                           : 'text-secondary hover:bg-surface-hover'
                       )}
                     >
-                      <FileText size={12} className={isSubAgentSelected(node.path) ? 'text-indigo' : 'text-tertiary'} />
-                      <span className="truncate flex-1">{node.name}</span>
+                      {/* Avatar or file icon */}
+                      {(() => {
+                        const agentName = node.name.replace(/\.md$/, '')
+                        const avatarUrl = getAvatarUrl(agentName)
+                        if (avatarUrl) {
+                          return (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleAvatarClick(agentName) }}
+                              className="w-5 h-5 rounded-full overflow-hidden shrink-0 hover:opacity-80 transition-opacity"
+                              title={`${agentName} - 点击更换头像`}
+                            >
+                              <img src={avatarUrl} alt={agentName} className="w-full h-full object-cover" />
+                            </button>
+                          )
+                        }
+                        return (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleAvatarClick(agentName) }}
+                            className="shrink-0 hover:opacity-80 transition-opacity"
+                            title={`${agentName} - 添加头像`}
+                          >
+                            <FileText size={12} className={isSubAgentSelected(node.path) ? 'text-indigo' : 'text-tertiary'} />
+                          </button>
+                        )
+                      })()}
+                      <span className="truncate flex-1">{node.name.replace(/\.md$/, '')}</span>
                     </div>
                   )}
                 </div>
@@ -428,6 +489,14 @@ export function AgentsPanel({
           </button>
         </div>
       )}
+      {/* Hidden avatar upload input */}
+      <input
+        ref={avatarInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/gif,image/webp"
+        className="hidden"
+        onChange={handleAvatarFileChange}
+      />
     </div>
   )
 }

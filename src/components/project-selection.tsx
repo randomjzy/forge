@@ -53,19 +53,19 @@ export function ProjectSelection({
           <div className="w-[560px] bg-surface border border-subtle rounded-2xl p-10 flex flex-col gap-8">
             {/* Header */}
             <div className="flex flex-col items-center gap-2">
-              <img src="/mascot.png" alt="Forge" className="w-14 h-14 object-contain" />
+              <img src="/mascot.png" alt="SiliconEmp" className="w-14 h-14 object-contain" />
               <h1 className="text-[28px] font-bold text-primary font-heading tracking-tight">
-                Open a Project
+                打开项目
               </h1>
               <p className="text-[14px] text-secondary text-center max-w-[400px]">
-                Select a recent project or open a new folder to get started.
+                选择一个最近的项目或打开新文件夹开始。
               </p>
             </div>
 
             {/* Recent projects list */}
             <div className="flex flex-col gap-0.5">
               <span className="text-[12px] font-semibold text-tertiary tracking-wider mb-1">
-                Recent Projects
+                最近项目
               </span>
               {workspaces.map((ws) => (
                 <div
@@ -105,7 +105,7 @@ export function ProjectSelection({
               onClick={onOpenFolder}
             >
               <FolderOpen className="w-4 h-4" />
-              Open Folder
+              打开文件夹
             </button>
           </div>
         ) : (
@@ -113,12 +113,12 @@ export function ProjectSelection({
           <div className="w-[480px] bg-surface border border-subtle rounded-2xl p-12 flex flex-col items-center gap-8">
             {/* Header */}
             <div className="flex flex-col items-center gap-2">
-              <img src="/mascot.png" alt="Forge" className="w-16 h-16 object-contain" />
+              <img src="/mascot.png" alt="SiliconEmp" className="w-16 h-16 object-contain" />
               <h1 className="text-[28px] font-bold text-primary font-heading tracking-tight">
-                Welcome to Forge
+                欢迎使用 SiliconEmp
               </h1>
               <p className="text-[14px] text-secondary text-center max-w-[380px]">
-                Open a project folder to start chatting with your AI agent.
+                打开项目文件夹开始与 AI agent 交流。
               </p>
             </div>
 
@@ -128,7 +128,7 @@ export function ProjectSelection({
               onClick={onOpenFolder}
             >
               <FolderOpen className="w-[18px] h-[18px]" />
-              Open Project Folder
+              打开项目文件夹
             </button>
           </div>
         )}
