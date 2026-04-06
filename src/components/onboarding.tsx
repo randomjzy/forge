@@ -196,10 +196,10 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                 <div className="rounded-lg bg-indigo/10 border border-indigo/20 p-4 flex flex-col gap-3">
                   <div className="flex items-center gap-2">
                     <Terminal size={16} className="text-indigo shrink-0" />
-                    <span className="text-[13px] font-semibold text-indigo">Claude Code CLI Detected</span>
+                    <span className="text-[13px] font-semibold text-indigo">{t('onboarding.cliDetectedTitle')}</span>
                   </div>
                   <p className="text-[12px] text-secondary">
-                    CLI is installed but not logged in. Sign in with your Claude subscription to get started.
+                    {t('onboarding.noSubscription')}
                   </p>
                   {oauthError && (
                     <p className="text-[11px] text-coral">{oauthError}</p>
@@ -208,7 +208,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                     onClick={handleCliLogin}
                     className="inline-flex items-center gap-1.5 px-5 h-9 rounded-md bg-indigo text-white text-[13px] font-semibold hover:opacity-90 transition-opacity w-fit"
                   >
-                    <LogIn size={14} /> Sign In with Claude
+                    <LogIn size={14} /> {t('onboarding.signInWithClaude')}
                   </button>
                 </div>
               ) : !cliInstalled ? (
@@ -220,7 +220,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
               <div className="flex flex-col gap-1.5">
                 <label className="text-[13px] font-semibold text-primary">
                   {cliInstalled && !cliDetected
-                    ? 'Or enter an Anthropic API Key'
+                    ? t('onboarding.orEnterApiKey')
                     : cliDetected
                       ? <>{t('onboarding.anthropicApiKey')} <span className="text-muted font-normal ml-1">({t('onboarding.cliActive')})</span></>
                       : <>{t('onboarding.anthropicApiKey')} <span className="text-coral font-normal ml-1">*</span></>
@@ -230,7 +230,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                   {cliDetected
                     ? t('onboarding.cliActive')
                     : cliInstalled
-                      ? "If you don't have a Claude subscription, enter your API key instead."
+                      ? t('onboarding.noSubscription')
                       : t('onboarding.getApiKey')
                   }
                 </p>
@@ -249,7 +249,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                 <div className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-elevated">
                   <Info size={14} className="text-tertiary shrink-0" />
                   <span className="text-[11px] text-tertiary">
-                    Tip: Install Claude Code CLI to use your subscription instead of API key
+                    {t('onboarding.installCliTip')}
                   </span>
                 </div>
               )}
@@ -291,19 +291,19 @@ export function Onboarding({ onComplete }: OnboardingProps) {
             <div className="flex flex-col items-center gap-6 py-8">
               <Loader2 size={48} className="text-indigo animate-spin" />
               <h2 className="text-[22px] font-bold text-primary tracking-tight" style={{ fontFamily: 'Fraunces, serif' }}>
-                Waiting for authentication...
+                {t('onboarding.waitingAuth')}
               </h2>
               <p className="text-[14px] text-secondary text-center max-w-[380px]">
-                A browser window has opened for you to sign in with your Claude account. Complete the login there and come back here.
+                {t('onboarding.waitingAuthDesc')}
               </p>
               <button
                 onClick={() => setOauthInProgress(false)}
                 className="inline-flex items-center justify-center px-6 h-10 rounded-lg border border-subtle text-[14px] font-medium text-secondary hover:bg-hover transition-colors"
               >
-                Cancel
+                {t('onboarding.cancel')}
               </button>
               <p className="text-[12px] text-muted text-center">
-                Having trouble? You can also enter an API key manually.
+                {t('onboarding.havingTrouble')}
               </p>
             </div>
           )}

@@ -10,12 +10,12 @@ interface I18nContextType {
 }
 
 const I18nContext = createContext<I18nContextType>({
-  locale: 'en',
+  locale: 'zh',
   setLocale: () => {},
   t: (key) => key,
 })
 
-export function I18nProvider({ children, initialLocale = 'en' }: { children: ReactNode; initialLocale?: Locale }) {
+export function I18nProvider({ children, initialLocale = 'zh' }: { children: ReactNode; initialLocale?: Locale }) {
   const [locale, setLocaleState] = useState<Locale>(initialLocale)
 
   useEffect(() => {

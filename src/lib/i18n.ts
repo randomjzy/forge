@@ -338,6 +338,15 @@ const translations: Record<Locale, Record<string, string>> = {
     'onboarding.chooseFolder': '选择项目文件夹',
     'onboarding.clickToSelect': '点击打开文件夹选择器',
     'onboarding.skipForNow': '跳过 — 稍后在设置中配置',
+    'onboarding.cliDetectedTitle': '检测到 Claude Code CLI',
+    'onboarding.signInWithClaude': '使用 Claude 登录',
+    'onboarding.installCliTip': '提示：安装 Claude Code CLI 以使用订阅而非 API Key',
+    'onboarding.waitingAuth': '等待身份验证...',
+    'onboarding.waitingAuthDesc': '浏览器已打开，请完成 Claude 账户登录。完成后返回这里继续。',
+    'onboarding.cancel': '取消',
+    'onboarding.havingTrouble': '遇到问题？你也可以手动输入 API Key。',
+    'onboarding.noSubscription': '如果没有 Claude 订阅，请输入 API Key。',
+    'onboarding.orEnterApiKey': '或输入 Anthropic API Key',
 
     // Settings additional
     'settings.customProviderDesc': '先选择协议，再填写端点。Anthropic 兼容的自定义提供商可直接用于 SiliconEmp 对话；OpenAI 兼容端点保留为兼容选项。',
@@ -893,6 +902,15 @@ const translations: Record<Locale, Record<string, string>> = {
     'onboarding.chooseFolder': 'Choose a Project Folder',
     'onboarding.clickToSelect': 'Click to open folder selector',
     'onboarding.skipForNow': "Skip for now — I'll configure in Settings later",
+    'onboarding.cliDetectedTitle': 'Claude Code CLI Detected',
+    'onboarding.signInWithClaude': 'Sign In with Claude',
+    'onboarding.installCliTip': 'Tip: Install Claude Code CLI to use your subscription instead of API key',
+    'onboarding.waitingAuth': 'Waiting for authentication...',
+    'onboarding.waitingAuthDesc': 'A browser window has opened for you to sign in with your Claude account. Complete the login there and come back here.',
+    'onboarding.cancel': 'Cancel',
+    'onboarding.havingTrouble': 'Having trouble? You can also enter an API key manually.',
+    'onboarding.noSubscription': "If you don't have a Claude subscription, enter your API key instead.",
+    'onboarding.orEnterApiKey': 'Or enter an Anthropic API Key',
 
     // Settings additional
     'settings.customProviderDesc': 'Choose a protocol first, then enter the endpoint. Anthropic-compatible custom providers can be used for Forge chats, while OpenAI-compatible endpoints are kept as a compatibility option.',
@@ -1134,7 +1152,7 @@ const translations: Record<Locale, Record<string, string>> = {
   },
 }
 
-let currentLocale: Locale = 'en'
+let currentLocale: Locale = 'zh'
 
 export function setLocale(locale: Locale): void {
   currentLocale = locale
