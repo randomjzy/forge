@@ -89,9 +89,50 @@ export function ChatView({
   const { agents } = useAgents()
   const { agents: fileAgents } = useFileAgents(workspaceId || null)
   const { getAvatarUrl } = useAgentAvatars()
-  const [groupMembers, setGroupMembers] = useState<GroupMember[]>(getDefaultGroupMembers())
+  
+  // Load saved group members from localStorage
+  const loadSavedGroupMembers = useCallback((): GroupMember[] | null => {
+    if (!session?.id) return null
+    try {
+      const key = `forge:groupMembers:${session.id}`
+      const saved = localStorage.getItem(key)
+      if (saved) {
+        return JSON.parse(saved) as GroupMember[]
+      }
+    } catch {
+      // ignore parse error
+    }
+    return null
+  }, [session?.id])
+
+  // Save group members to localStorage
+  const saveGroupMembers = useCallback((members: GroupMember[]) => {
+    if (!session?.id) return
+    try {
+      const key = `forge:groupMembers:${session.id}`
+      localStorage.setItem(key, JSON.stringify(members))
+    } catch {
+      // ignore storage error
+    }
+  }, [session?.id])
+
+  const [groupMembers, setGroupMembers] = useState<GroupMember[]>(() => {
+    const saved = loadSavedGroupMembers()
+    return saved || getDefaultGroupMembers()
+  })
   const [activeMemberId, setActiveMemberId] = useState<string | null>('secretary')
-  const [invitedAgentIds, setInvitedAgentIds] = useState<Set<string>>(new Set())
+  const [invitedAgentIds, setInvitedAgentIds] = useState<Set<string>>(() => {
+    const saved = loadSavedGroupMembers()
+    if (saved) {
+      return new Set(saved.filter(m => m.type === 'agent').map(m => m.id))
+    }
+    return new Set()
+  })
+
+  // Save group members whenever they change
+  useEffect(() => {
+    saveGroupMembers(groupMembers)
+  }, [groupMembers, saveGroupMembers])
 
   // Agent mention handling
   const handleMentionSelect = useCallback((memberId: string, newInput: string) => {
